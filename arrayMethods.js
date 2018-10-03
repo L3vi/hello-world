@@ -1,3 +1,14 @@
+// Array Methods
+// Levi Stum
+
+/* 
+    1. What does it do? make sure to explain all the parameters. If it has a function as a parameter, make sure to explain all of the parameters for that function.
+    2. Does it edit the current array?
+    3. What does it return?
+    4. How can I use this? Come up (not one off the internet) with a small real world example and explain it.
+    5. Build your real world example.
+*/
+
 /*
 PUSH
 1. Adds elements to the end of the array
@@ -12,14 +23,15 @@ groceries.push("Milk");
 
 /*
 POP
-1. Removes elements from the end of the array
-2. Yes, removes element(s) from the array
-3. Returns the item that was "popped".
-4. Assuming your are purchasing items from the bottom up on your grocery list... pop will remove the last item on your grocery list.
-5. See Below.
+1. Removes element from end of array.
+2. It changes the length of the array by removing an item.
+3. Returns the item removed (more specifically just returns the last item of the array).
+4. When you need to remove an element from an array. Assuming you are buying things from the end of the array...
+5. See Below
 */
-// Using that same grocery list from above:
+var groceries = ["Eggs", "Milk", "Cheese"]
 groceries.pop();
+// Returns Cheese
 
 /*
 SHIFT
