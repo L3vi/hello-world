@@ -120,17 +120,21 @@ Hillion,1363900,Chizered,Westuming`;
  ******************************************************/
 function convertData(data) {
     //  [ {countryName, [{stateName, [ {cityName, Population}]}}]
-    /*
-    array of objects containing country, state, city, and population
-    need to create an array of countries
-    each country having a value which would be an array of states
-    each state would have a value which would be an array of cities
-    and each city would have a value of a population
-
-    QUESTION: does each country, state, city, etc. have a 'VALUE' or does it coordinate with the array otherwise?
-    */
+    const convertedData = data.reduce((countries, dataEntry) => {
+        return countries.push(dataEntry);
+        // TODO: Check if convertedDate includes country, state, and city (in that order)
+        /*countries.push({name: String, states: [{name: String, cities: [{name: String, population: Number}]}]});
+        countries.name = "USA";
+        countries.states.name = "Utah";
+        countries.states.cities.name = "Mount Pleasant";
+        countries.states.cities.population = 4000;
+        */
+    }, []);
+    console.log(convertedData);
+    // var convertedData = data.map(({Country, State, Name, Population}) => ({Country: Country, State: {State: State, City: {City: Name, Population: Population}}}));
+    // console.log(convertedData);
+    
     const countries = data.reduce((acc, val) => acc.concat(val.Country), []).filter((country, index, countries) => countries.indexOf(country) === index);
-    console.log(countries);
     // Removes duplicates. got idea from https://stackoverflow.com/questions/1960473/get-all-unique-values-in-a-javascript-array-remove-duplicates
 
     const states = data.reduce((acc, val) => acc.concat(val.State), []);
