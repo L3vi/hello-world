@@ -120,11 +120,51 @@ Hillion,1363900,Chizered,Westuming`;
  ******************************************************/
 function convertData(data) {
     //  [ {countryName, [{stateName, [ {cityName, Population}]}}]
-    const convertedData = data.reduce((countries, dataEntry) => {
-        return countries.push(dataEntry);
+    const uniqueCountries = [];
+    const uniqueStates = [];
+    const uniqueCities = [];
+    const convertedData = data.reduce((countries, dataEntry, index) => {
         // TODO: Check if convertedDate includes country, state, and city (in that order)
+        const country = dataEntry.Country;
+        const state = dataEntry.State;
+        const city = dataEntry.Name;
+        const population = dataEntry.Population;
+        if (!uniqueCountries.includes(country)) {
+            uniqueCountries.push(country);
+            if (!uniqueStates.includes(state)) {
+                uniqueStates.push(state);
+                if (!uniqueCities.includes(city)) {
+                    uniqueCities.push(city);
+                    countries.push({
+                        name: dataEntry.Country,
+                        states: [{
+                            name: dataEntry.State,
+                            cities: [{
+                                name: dataEntry.Name,
+                                population: dataEntry.Population
+                            }]
+                        }]
+                    });
+                }
+            }
+        } else {
+            if (!uniqueStates.includes(state)) {
+                uniqueStates.push(state);
+                // console.log(countries[uniqueCountries.indexOf(country)].name);
+                // YOU ARE HERE!
+                /*countries[uniqueCountries.indexOf(country)].states.push({
+                    name: state
+                });*/
+                if (!uniqueCities.includes(city)) {
+                    uniqueCities.push(city);
+
+                    countries[uniqueCountries.indexOf(country)];
+                }
+            }
+        }
+        /*
         countries.push({
-            name: String,
+            name: dataEntry.Country,
             states: [{
                 name: String,
                 cities: [{
@@ -133,6 +173,17 @@ function convertData(data) {
                 }]
             }]
         });
+        */
+
+        // if (countries[index].name.includes(dataEntry.Country)) {
+        //     console.log(dataEntry.Country);
+        // }
+        return countries;
+        countries[index].name = dataEntry.Country;
+        countries[index].states.name = dataEntry.State;
+        countries[index].states[0].cities[0].name = dataEntry.name;
+        // countries[i].states.cities.population = dataEntry.Population;
+
         countries.name = "USA";
         countries.states.name = "Utah";
         countries.states.cities.name = "Mount Pleasant";
