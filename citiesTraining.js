@@ -196,22 +196,40 @@ function convertData(data) {
     // Removes duplicates. got idea from https://stackoverflow.com/questions/1960473/get-all-unique-values-in-a-javascript-array-remove-duplicates
     const duplicates = (item, index, items) => (items.indexOf(item) === index);
 
-    const countries = data.reduce((acc, val) => acc.concat(val.Country), []).filter(duplicates);
-    countries.map((e, i) => {
+    var countries = data.reduce((acc, val) => acc.concat(val.Country), []).filter(duplicates).map((e) => {
         return {
-            // TODO: mapping states to countries, then cities to states
-            /*
-            name: countries[countries.indexOf(e.country)],
+            name: e,
             states: [{
-                name: e.State,
+                name: String,
                 cities: [{
-                    name: e.Name,
-                    population: e.Population
+                    name: String,
+                    population: Number
                 }]
             }]
-            */
         }
     });
+    data.map(entry => {
+        var country = countries.filter(country => country.name == entry.Country);
+        // TODO: Check if state exists. if not, push in state. IF it does push city to respective state
+        // country[0].states.push({name: entry.State, cities: [{name: entry.Name, population: entry.Population}]});
+        countries.forEach(country => {
+            if (country.name == entry.Country) {
+                country.states.filter(state => state.name == entry.State)
+                .map(e => console.log(e));
+                // if (country.states[country.states.indexOf(entry.State)]) {
+                //     country.states[country.states.indexOf(entry.State)].cities.push({name: entry.Name, population: entry.Population});
+                // } else if (country.states[country.states.indexOf(entry.State)].cities[indexOf(entry.Name)]) {
+                //     country.states.push({name: entry.State, cities: [{name: entry.Name, population: entry.Population}]});
+                //     country.states[country.states.indexOf(entry.State)].cities.push({name: entry.Name, population: entry.Population});
+                // }
+            }
+        });
+        return {
+                
+        }
+    });
+    console.log(countries[0]);
+
     var array1 = [1, 2, 3];
     var array2 = [4, 5, 6];
     var array3 = array1.map((e, i) => {
@@ -221,8 +239,7 @@ function convertData(data) {
         }
     });
     console.log(array3);
-    data.map((e, i) => countries[countries.indexOf(e.Country)].concat(e.State));
-    console.log(countries);
+    // data.map((e, i) => countries[countries.indexOf(e.Country)].concat(e.State));
     return countries;
 
 
