@@ -120,6 +120,10 @@ Hillion,1363900,Chizered,Westuming`;
  ******************************************************/
 function convertData(data) {
     //  [ {countryName, [{stateName, [ {cityName, Population}]}}]
+
+
+    // OLD VERSION
+    /*
     const uniqueCountries = [];
     const uniqueStates = [];
     const uniqueCities = [];
@@ -147,55 +151,81 @@ function convertData(data) {
                     });
                 }
             }
-        } else {
-            if (!uniqueStates.includes(state)) {
-                uniqueStates.push(state);
-                // console.log(countries[uniqueCountries.indexOf(country)].name);
-                // YOU ARE HERE!
-                /*countries[uniqueCountries.indexOf(country)].states.push({
-                    name: state
-                });*/
-                if (!uniqueCities.includes(city)) {
-                    uniqueCities.push(city);
-
-                    countries[uniqueCountries.indexOf(country)];
-                }
-            }
-        }
-        /*
-        countries.push({
-            name: dataEntry.Country,
-            states: [{
-                name: String,
+        } else if (!uniqueStates.includes(state)) {
+            uniqueStates.push(state);
+            // console.log(countries[uniqueCountries.indexOf(country)].name);
+            countries[uniqueCountries.indexOf(country)].states.push({
+                name: state,
                 cities: [{
-                    name: String,
-                    population: Number
+                    name: city,
+                    population: population
+                }]
+            });
+        } else if (!uniqueCities.includes(city)) {
+            uniqueCities.push(city);
+            // counries[uniqueCities.indexOf(country).states[uniqueStates.indexOf(state)]]
+            // .cities.push({
+            //     name: city,
+            //     population: population
+            // });
+        }
+        
+
+    
+    countries.push({
+        name: dataEntry.Country,
+        states: [{
+            name: String,
+            cities: [{
+                name: String,
+                population: Number
+            }]
+        }]
+    });
+    
+    return countries;
+
+    countries.name = "USA";
+    countries.states.name = "Utah";
+    countries.states.cities.name = "Mount Pleasant";
+    countries.states.cities.population = 4000;
+
+}, []);
+*/
+
+    // Removes duplicates. got idea from https://stackoverflow.com/questions/1960473/get-all-unique-values-in-a-javascript-array-remove-duplicates
+    const duplicates = (item, index, items) => (items.indexOf(item) === index);
+
+    const countries = data.reduce((acc, val) => acc.concat(val.Country), []).filter(duplicates);
+    countries.map((e, i) => {
+        return {
+            // TODO: mapping states to countries, then cities to states
+            /*
+            name: countries[countries.indexOf(e.country)],
+            states: [{
+                name: e.State,
+                cities: [{
+                    name: e.Name,
+                    population: e.Population
                 }]
             }]
-        });
-        */
+            */
+        }
+    });
+    var array1 = [1, 2, 3];
+    var array2 = [4, 5, 6];
+    var array3 = array1.map((e, i) => {
+        return {
+            key: e,
+            value: array2[i]
+        }
+    });
+    console.log(array3);
+    data.map((e, i) => countries[countries.indexOf(e.Country)].concat(e.State));
+    console.log(countries);
+    return countries;
 
-        // if (countries[index].name.includes(dataEntry.Country)) {
-        //     console.log(dataEntry.Country);
-        // }
-        return countries;
-        countries[index].name = dataEntry.Country;
-        countries[index].states.name = dataEntry.State;
-        countries[index].states[0].cities[0].name = dataEntry.name;
-        // countries[i].states.cities.population = dataEntry.Population;
 
-        countries.name = "USA";
-        countries.states.name = "Utah";
-        countries.states.cities.name = "Mount Pleasant";
-        countries.states.cities.population = 4000;
-
-    }, []);
-    console.log(convertedData);
-    // var convertedData = data.map(({Country, State, Name, Population}) => ({Country: Country, State: {State: State, City: {City: Name, Population: Population}}}));
-    // console.log(convertedData);
-
-    const countries = data.reduce((acc, val) => acc.concat(val.Country), []).filter((country, index, countries) => countries.indexOf(country) === index);
-    // Removes duplicates. got idea from https://stackoverflow.com/questions/1960473/get-all-unique-values-in-a-javascript-array-remove-duplicates
 
     const states = data.reduce((acc, val) => acc.concat(val.State), []);
     const populations = data.reduce((acc, val) => acc.concat(val.Population), []);
