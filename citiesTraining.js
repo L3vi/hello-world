@@ -121,136 +121,60 @@ Hillion,1363900,Chizered,Westuming`;
 function convertData(data) {
     //  [ {countryName, [{stateName, [ {cityName, Population}]}}]
 
-
-    // OLD VERSION
-    /*
-    const uniqueCountries = [];
-    const uniqueStates = [];
-    const uniqueCities = [];
-    const convertedData = data.reduce((countries, dataEntry, index) => {
-        // TODO: Check if convertedDate includes country, state, and city (in that order)
-        const country = dataEntry.Country;
-        const state = dataEntry.State;
-        const city = dataEntry.Name;
-        const population = dataEntry.Population;
-        if (!uniqueCountries.includes(country)) {
-            uniqueCountries.push(country);
-            if (!uniqueStates.includes(state)) {
-                uniqueStates.push(state);
-                if (!uniqueCities.includes(city)) {
-                    uniqueCities.push(city);
-                    countries.push({
-                        name: dataEntry.Country,
-                        states: [{
-                            name: dataEntry.State,
-                            cities: [{
-                                name: dataEntry.Name,
-                                population: dataEntry.Population
-                            }]
-                        }]
-                    });
-                }
-            }
-        } else if (!uniqueStates.includes(state)) {
-            uniqueStates.push(state);
-            // console.log(countries[uniqueCountries.indexOf(country)].name);
-            countries[uniqueCountries.indexOf(country)].states.push({
-                name: state,
-                cities: [{
-                    name: city,
-                    population: population
-                }]
-            });
-        } else if (!uniqueCities.includes(city)) {
-            uniqueCities.push(city);
-            // counries[uniqueCities.indexOf(country).states[uniqueStates.indexOf(state)]]
-            // .cities.push({
-            //     name: city,
-            //     population: population
-            // });
-        }
-        
-
-    
-    countries.push({
-        name: dataEntry.Country,
-        states: [{
-            name: String,
-            cities: [{
-                name: String,
-                population: Number
-            }]
-        }]
-    });
-    
-    return countries;
-
-    countries.name = "USA";
-    countries.states.name = "Utah";
-    countries.states.cities.name = "Mount Pleasant";
-    countries.states.cities.population = 4000;
-
-}, []);
-*/
-
     // Removes duplicates. got idea from https://stackoverflow.com/questions/1960473/get-all-unique-values-in-a-javascript-array-remove-duplicates
     const duplicates = (item, index, items) => (items.indexOf(item) === index);
 
-    var countries = data.reduce((acc, val) => acc.concat(val.Country), []).filter(duplicates).map((e) => {
+    // var countries = data.reduce((newData, entry) => newData.concat(entry.Country), []).filter(duplicates);
+    newData = data.map((e) => {
         return {
-            name: e,
-            states: [{
-                name: String,
-                cities: [{
-                    name: String,
-                    population: Number
+            Name: e.Country,
+            States: [{
+                Name: e.State,
+                Cities: [{
+                    Name: e.Name,
+                    Population: e.Population
                 }]
             }]
         }
     });
-    data.map(entry => {
-        var country = countries.filter(country => country.name == entry.Country);
-        // TODO: Check if state exists. if not, push in state. IF it does push city to respective state
-        // country[0].states.push({name: entry.State, cities: [{name: entry.Name, population: entry.Population}]});
-        countries.forEach(country => {
-            if (country.name == entry.Country) {
-                country.states.filter(state => state.name == entry.State)
-                .map(e => console.log(e));
-                // if (country.states[country.states.indexOf(entry.State)]) {
-                //     country.states[country.states.indexOf(entry.State)].cities.push({name: entry.Name, population: entry.Population});
-                // } else if (country.states[country.states.indexOf(entry.State)].cities[indexOf(entry.Name)]) {
-                //     country.states.push({name: entry.State, cities: [{name: entry.Name, population: entry.Population}]});
-                //     country.states[country.states.indexOf(entry.State)].cities.push({name: entry.Name, population: entry.Population});
-                // }
-            }
+
+    // Makes a list of unnique country names.
+    var countryNames = data.reduce((countries, entry) => countries.concat(entry.Country), []).filter(duplicates);
+
+
+    var countries = countryNames.map(countryName => {
+        // For each country filter it down to non-duplicates and squish the states together.
+        var country = newData.filter((entry) => countryName === entry.Name).reduce((newCountry, country) => {
+            newCountry.Name = country.Name;
+            // Not very dynamic. But there's only one item in the states array
+            newCountry.States.push(country.States[0]);
+            return newCountry;
+        },{
+            Name: 'Country',
+            States: []
         });
-        return {
-                
-        }
-    });
-    console.log(countries[0]);
 
-    var array1 = [1, 2, 3];
-    var array2 = [4, 5, 6];
-    var array3 = array1.map((e, i) => {
-        return {
-            key: e,
-            value: array2[i]
-        }
+        // Makes a list of unnique state names.
+        var stateNames = country.States.reduce((states, entry) => states.concat(entry.Name), []).filter(duplicates);
+
+        // For each state filter it down to non-duplicates and squish the cities together.
+        country.States = stateNames.map(stateName => {
+            var state = country.States.filter((entry) => stateName === entry.Name).reduce((newState, state) => {
+                newState.Name = state.Name;
+                // Not very dynamic. But there's only one item in the cities array
+                newState.Cities.push(state.Cities[0]);
+                return newState;
+            }, {
+                Name: 'State',
+                Cities: []
+            });
+            return state;
+        });
+
+       return country; 
     });
-    console.log(array3);
-    // data.map((e, i) => countries[countries.indexOf(e.Country)].concat(e.State));
+
     return countries;
-
-
-
-    const states = data.reduce((acc, val) => acc.concat(val.State), []);
-    const populations = data.reduce((acc, val) => acc.concat(val.Population), []);
-    const names = data.reduce((acc, val) => acc.concat(val.Name), []);
-
-    // var data2 = data.forEach(element => {
-    //     console.log(element);
-    // });
 }
 
 /******************************************************
@@ -319,6 +243,7 @@ function main() {
     var data = d3.csvParse(csvData);
     var convertedData = convertData(data);
     var sortedData = sortData(convertedData);
+    display(convertedData);
     // display(sortedData);
 }
 
