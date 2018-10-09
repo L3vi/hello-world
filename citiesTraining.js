@@ -193,32 +193,20 @@ function convertData(data) {
 function sortData(data) {
     // Sort the data by country name
     data.sort((a, b) => {
-        if (a.Name.toUpperCase() < b.Name.toUpperCase()) {
-            return -1;
-        }
-        if (a.Name.toUpperCase() > b.Name.toUpperCase()) {
-            return 1;
-        }
+        if (a.Name.toUpperCase() < b.Name.toUpperCase()) { return -1; }
+        if (a.Name.toUpperCase() > b.Name.toUpperCase()) { return 1;}
         return 0;
     }).map((country) => {
         // Sort the states by name
         country.States.sort((a, b) => {
-            if (a.Name.toUpperCase() < b.Name.toUpperCase()) {
-                return -1;
-            }
-            if (a.Name.toUpperCase() > b.Name.toUpperCase()) {
-                return 1;
-            }
+            if (a.Name.toUpperCase() < b.Name.toUpperCase()) { return -1; }
+            if (a.Name.toUpperCase() > b.Name.toUpperCase()) { return 1; }
             return 0;
         }).map((state) => {
             // Sort the cities by population (least to greatest)
             state.Cities.sort((a, b) => {
-                if (parseInt(a.Population) < parseInt(b.Population)) {
-                    return -1
-                }
-                if (parseInt(a.Population) > parseInt(b.Population)) {
-                    return 1
-                }
+                if (parseInt(a.Population) < parseInt(b.Population)) { return -1 }
+                if (parseInt(a.Population) > parseInt(b.Population)) { return 1 }
                 return 0;
             });
         });
