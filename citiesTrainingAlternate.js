@@ -124,20 +124,6 @@ function convertData(data) {
     // Removes duplicates. got idea from https://stackoverflow.com/questions/1960473/get-all-unique-values-in-a-javascript-array-remove-duplicates
     const duplicates = (item, index, items) => (items.indexOf(item) === index);
 
-    // This organizes all the data into the desired format (not combined/reduced though)
-    let newData = data.map((e) => {
-        return {
-            Name: e.Country,
-            States: [{
-                Name: e.State,
-                Cities: [{
-                    Name: e.Name,
-                    Population: e.Population
-                }]
-            }]
-        }
-    });
-
     // Makes a list of unnique country names by sifting out duplicates
     var countryNames = data.map(entry => entry.Country).filter(duplicates);
 
@@ -164,7 +150,10 @@ function convertData(data) {
             var state = data.filter((entry) => stateName === entry.State && countryName === entry.Country).reduce((newState, entry) => {
                 newState.Name = entry.State;
                 // Not very dynamic. But there's only one item in the cities array
-                newState.Cities.push(entry.City);
+                newState.Cities.push({
+                    Name: entry.Name,
+                    Population: entry.Population
+                });
                 return newState;
             }, {
                 Name: 'State',
@@ -175,7 +164,7 @@ function convertData(data) {
 
         return country;
     });
-    console.log(countries[0]);
+    console.log(countries[0].States[0]);
     return countries;
 }
 
@@ -277,7 +266,7 @@ function main() {
     var data = d3.csvParse(csvData);
     var convertedData = convertData(data);
     var sortedData = sortData(convertedData);
-    // display(sortedData);
+    display(sortedData);
 }
 
 main();
