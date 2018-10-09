@@ -124,8 +124,8 @@ function convertData(data) {
     // Removes duplicates. got idea from https://stackoverflow.com/questions/1960473/get-all-unique-values-in-a-javascript-array-remove-duplicates
     const duplicates = (item, index, items) => (items.indexOf(item) === index);
 
-    // var countries = data.reduce((newData, entry) => newData.concat(entry.Country), []).filter(duplicates);
-    newData = data.map((e) => {
+    // This organizes all the data into the desired format (not combined/reduced though)
+    let newData = data.map((e) => {
         return {
             Name: e.Country,
             States: [{
@@ -138,10 +138,10 @@ function convertData(data) {
         }
     });
 
-    // Makes a list of unnique country names.
+    // Makes a list of unnique country names by sifting out duplicates
     var countryNames = data.reduce((countries, entry) => countries.concat(entry.Country), []).filter(duplicates);
 
-
+    // This is where the magic happens. This combination of array methods filters out and squishes together the data
     var countries = countryNames.map(countryName => {
         // For each country filter it down to non-duplicates and squish the states together.
         var country = newData.filter((entry) => countryName === entry.Name).reduce((newCountry, country) => {
@@ -149,7 +149,7 @@ function convertData(data) {
             // Not very dynamic. But there's only one item in the states array
             newCountry.States.push(country.States[0]);
             return newCountry;
-        },{
+        }, {
             Name: 'Country',
             States: []
         });
@@ -171,7 +171,7 @@ function convertData(data) {
             return state;
         });
 
-       return country; 
+        return country;
     });
 
     return countries;
@@ -191,7 +191,39 @@ function convertData(data) {
  * sorted data.
  ******************************************************/
 function sortData(data) {
-
+    // Sort the data by country name
+    data.sort((a, b) => {
+        if (a.Name.toUpperCase() < b.Name.toUpperCase()) {
+            return -1;
+        }
+        if (a.Name.toUpperCase() > b.Name.toUpperCase()) {
+            return 1;
+        }
+        return 0;
+    }).map((country) => {
+        // Sort the states by name
+        country.States.sort((a, b) => {
+            if (a.Name.toUpperCase() < b.Name.toUpperCase()) {
+                return -1;
+            }
+            if (a.Name.toUpperCase() > b.Name.toUpperCase()) {
+                return 1;
+            }
+            return 0;
+        }).map((state) => {
+            // Sort the cities by population (least to greatest)
+            state.Cities.sort((a, b) => {
+                if (parseInt(a.Population) < parseInt(b.Population)) {
+                    return -1
+                }
+                if (parseInt(a.Population) > parseInt(b.Population)) {
+                    return 1
+                }
+                return 0;
+            });
+        });
+    });
+    return data;
 }
 
 /******************************************************
@@ -243,8 +275,7 @@ function main() {
     var data = d3.csvParse(csvData);
     var convertedData = convertData(data);
     var sortedData = sortData(convertedData);
-    display(convertedData);
-    // display(sortedData);
+    display(sortedData);
 }
 
 main();
