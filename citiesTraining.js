@@ -131,8 +131,9 @@ function convertData(data) {
     var countries = countryNames.map(countryName => {
         // For each country filter it down to non-duplicates and squish the states together.
         var country = data.filter((entry) => countryName === entry.Country).reduce((newCountry, entry) => {
+            // Sets the country name
             newCountry.Name = entry.Country;
-            // Not very dynamic. But there's only one item in the states array
+            // Pushes the state to the states array
             newCountry.States.push(entry.State);
 
             return newCountry;
@@ -149,7 +150,7 @@ function convertData(data) {
 
             var state = data.filter((entry) => stateName === entry.State && countryName === entry.Country).reduce((newState, entry) => {
                 newState.Name = entry.State;
-                // Not very dynamic. But there's only one item in the cities array
+                // Pushes a new city object into the city array
                 newState.Cities.push({
                     Name: entry.Name,
                     Population: entry.Population
