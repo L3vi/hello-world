@@ -3,7 +3,8 @@ var extension = process.argv[3];
 var myModule = require('./module');
 var path = require('path');
 
-function callback(error, data) {
+
+myModule(directory, extension, (error, data) => {
     if (!error) {
         data.forEach(file => {
             console.log(file);
@@ -11,6 +12,4 @@ function callback(error, data) {
     } else {
         console.log(error);
     }
-};
-
-myModule(directory, extension, callback);
+});
