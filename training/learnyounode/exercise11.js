@@ -16,16 +16,7 @@ var server = http.createServer((request, response) => {
     response.on('error', (error) => {
         console.error(error);
     });
-    request.on('readable', () => {
-        console.log("Request received");
-        var src = fs.createReadStream(process.argv[3]);
-        src.pipe(response);
-    });
 
-    response.on('pipe', data => {
-        console.log(data);
-    });
-
-    response.end();
+    fs.createReadStream(process.argv[3]).pipe(response);
 });
 server.listen(process.argv[2]);
