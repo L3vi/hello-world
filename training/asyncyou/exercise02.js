@@ -29,5 +29,6 @@ async.series({
         });
     }
 }, (error, results) => {
+    if (error) console.log(error.message);
     console.log(results);
 });
