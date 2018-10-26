@@ -6,6 +6,7 @@ count = 0;
 async.whilst(() => responseBody != 'meerkat', callback => {
     count++;
     http.get(process.argv[2], response => {
+        
         response.on('data', chunk => {
             responseBody = chunk.toString();
         });
